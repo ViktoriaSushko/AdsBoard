@@ -1,0 +1,58 @@
+﻿@using System.Security.Claims
+@model IEnumerable<AdsBoard.Models.Advertisement>
+
+@{
+    ViewData["Title"] = "Оголошення";
+    var currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+}
+
+<h1>@ViewData["Title"]</h1>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Додати оголошення</a>
+</p>
+
+<table class="table align-middle">
+    <thead>
+        <tr>
+            <th></th>
+            <th>@Html.DisplayNameFor(m => m.Title)</th>
+            <th>@Html.DisplayNameFor(m => m.Category)</th>
+            <th>@Html.DisplayNameFor(m => m.Price)</th>
+            <th>@Html.DisplayNameFor(m => m.City)</th>
+            <th>@Html.DisplayNameFor(m => m.CreateAt)</th>
+            <th>@Html.DisplayNameFor(m => m.IsActive)</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td style="width:110px">
+                    @if (!string.IsNullOrEmpty(item.ImageUrl))
+                    {
+                        <img src="@item.ImageUrl" alt="@item.Title" style="max-width:100px; max-height:80px" class="img-thumbnail" />
+                    }
+                </td>
+                <td>@item.Title</td>
+                <td>@item.Category?.Name</td>
+                <td>@item.Price.ToString("N2") грн</td>
+                <td>@item.City</td>
+                <td>@item.CreateAt.ToLocalTime().ToString("dd.MM.yyyy HH:mm")</td>
+                <td>@Html.DisplayFor(m => item.IsActive)</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.Id">Деталі</a>
+                    @if (item.UserId == currentUserId)
+                    {
+                        <span> | </span>
+                        <a asp-action="Edit" asp-route-id="@item.Id">Редагувати</a>
+                        <span> | </span>
+                        <a asp-action="Delete" asp-route-id="@item.Id">Видалити</a>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
