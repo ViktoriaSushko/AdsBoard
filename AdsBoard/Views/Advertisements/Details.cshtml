@@ -1,22 +1,29 @@
+﻿@using System.Security.Claims
 @model AdsBoard.Models.Advertisement
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = Model.Title;
 }
 
-<h1>Details</h1>
-
-<div>
-    <h4>Advertisement</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Title)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Title)
-        </dd>
-    </dl>
+<h1>@ViewData["Title"]</h1>
+<hr />
+<div class="row">
+    @if (!string.IsNullOrEmpty(Model.ImageUrl))
+    {
+        <div class="col-md-5 mb-3">
+            <img src="@Model.ImageUrl" alt="@Model.Title" class="img-fluid rounded"/>
+        </div>
+    }
+    
+    <dl>
+    <dt class="col-sm-2">
+        @Html.DisplayNameFor(model => model.Category)
+    </dt>
+    <dd class="col-sm-10">
+        @Model.Category?.Name
+    </dd>
+</dl>
+<dl>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Description)
         </dt>
@@ -28,7 +35,7 @@
             @Html.DisplayNameFor(model => model.Price)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Price)
+            @Model.Price.ToString("N2") грн.
         </dd>
     </dl>
         <dt class = "col-sm-2">
@@ -45,57 +52,27 @@
             @Html.DisplayFor(model => model.Phone)
         </dd>
     </dl>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ImageUrl)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ImageUrl)
-        </dd>
-    </dl>
+     
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.CreateAt)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CreateAt)
+         @Model.CreateAt.ToLocalTime().ToString("dd.MM.yyyy HH:mm")
         </dd>
     </dl>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.IsActive)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IsActive)
+            @(Model.IsActive?"Активне":"Неактивне")
         </dd>
-    </dl>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.CategoryId)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.CategoryId)
-        </dd>
-    </dl>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.UserId)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.UserId)
-        </dd>
-    </dl>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Category)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Category)
-        </dd>
-    </dl>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.User)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.User)
-        </dd>
-    </dl>
+    </dl>     
+      
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
+    @if(Model.UserId==User.FindFirstValue(ClaimTypes.NameIdentifier)){
+        <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a>
+        <span>  |</span>    }
+ 
     <a asp-action="Index">Back to List</a>
 </div>
